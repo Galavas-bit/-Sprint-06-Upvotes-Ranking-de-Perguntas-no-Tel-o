@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class Pergunta extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['evento_id', 'user_id', 'texto', 'status'];
+
+    public function evento(): BelongsTo
+    {
+        return $this->belongsTo(Evento::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * TICKET #010: usuários que votaram (upvote) nesta pergunta.
+     * Tabela pivot: pergunta_user
+     */
+    public function votos(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'pergunta_user')
+            ->withTimestamps();
+    }
+}
